@@ -1,4 +1,5 @@
 import requests
+import json
 
 client_id = '0feca865-844a-4260-939a-a725430e72cc'
 
@@ -11,14 +12,15 @@ parameters = {
 # Issue an HTTP GET request
 r = requests.get(endpoint, parameters, auth=(client_id,''))
 # Extract JSON data
-json = r.json()
+json1 = r.json()
 
 if r.status_code == 200:
-    data = json['data']
+    data = json1['data']
     print('Data retrieved from frost.met.no!')
 else:
     print('Error! Returned status code %s' % r.status_code)
-    print('Message: %s' % json['error']['message'])
-    print('Reason: %s' % json['error']['reason'])
+    print('Message: %s' % json1['error']['message'])
+    print('Reason: %s' % json1['error']['reason'])
 
-    
+with open('data.txt', 'w') as f:
+    json.dump(data, f)
