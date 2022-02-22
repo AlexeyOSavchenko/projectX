@@ -14,7 +14,7 @@ def get_data(endpoint, parameters):
 
 """ Get Norwegian weather stations which measures wind from direction"""
 sources_endpoint = 'https://frost.met.no/sources/v0.jsonld'
-sources_parameters = {'ids': 'SN*', 'country': 'NO', 'elements': 'wind_from_direction', 'validtime': '1800-01-01/2020-01-01'}
+sources_parameters = {'ids': 'SN*', 'country': 'NO', 'elements': 'wind_from_direction', 'validtime': '1800-01-01/2020-01-01', 'fields': 'id,name,country'}
 sources_data = get_data(sources_endpoint, sources_parameters)
 list_sources_id = []
 for key in range(len(sources_data)):
@@ -22,10 +22,10 @@ for key in range(len(sources_data)):
 
 
 """"Search oldest periods of observations with wind_from_direction measures
-    SN can have another date period ValidFrom and ValidTo, but wind direction measurements have a different period (from 
+    SN has date period ValidFrom and ValidTo, but wind direction measurements have a different periods (from 
     Available time series with key wind_from_direction)"""
 available_time_series_url = 'https://frost.met.no/observations/availableTimeSeries/v0.jsonld'
-available_time_series_parameters = {'elements': 'wind_from_direction'}
+available_time_series_parameters = {'elements': 'wind_from_direction', 'fields': 'sourceId,validFrom,elementId'}
 available_time_series_data = get_data(available_time_series_url, available_time_series_parameters)
 available_time_series_list = []
 for key in range(len(available_time_series_data)):
