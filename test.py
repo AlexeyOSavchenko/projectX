@@ -1,24 +1,29 @@
 import requests
+import re
+from datetime import datetime, timedelta
 import json
 
 client_id = '0feca865-844a-4260-939a-a725430e72cc'
 
-sources_endpoint = 'https://frost.met.no/sources/v0.jsonld'
-sources_parameters = {'ids': 'SN*', 'country': 'NO', 'elements': 'wind_from_direction', 'validtime': '1800-01-01/2000-01-01'}
 
 def get_data(endpoint, parameters):
     response = requests.get(endpoint, parameters, auth=(client_id, '')).json()
     json_data = response['data']
     return json_data
 
-sources_data = get_data(sources_endpoint, sources_parameters)
 
+""" Get Norwegian weather stations which measures wind from direction"""
+sources_endpoint = 'https://frost.met.no/sources/v0.jsonld'
+sources_parameters = {'ids': 'SN*', 'country': 'NO', 'elements': 'wind_from_direction', 'validtime': '1800-01-01/2020-01-01'}
+sources_data = get_data(sources_endpoint, sources_parameters)
 list_sources_id = []
 for key in range(len(sources_data)):
     list_sources_id.append(sources_data[key]["id"])
-print(list_sources_id)
 
-""""Search oldest periods of observations with wind_from_direction measures"""
+
+""""Search oldest periods of observations with wind_from_direction measures
+    SN can have another date period ValidFrom and ValidTo, but wind direction measurements have a different period (from 
+    Available time series with key wind_from_direction)"""
 available_time_series_url = 'https://frost.met.no/observations/availableTimeSeries/v0.jsonld'
 available_time_series_parameters = {'elements': 'wind_from_direction'}
 available_time_series_data = get_data(available_time_series_url, available_time_series_parameters)
@@ -26,74 +31,21 @@ available_time_series_list = []
 for key in range(len(available_time_series_data)):
     available_time_series_list.append((available_time_series_data[key]["validFrom"], available_time_series_data[key]["sourceId"]))
 available_time_series_list.sort()
-#print(available_time_series_list[0][1])
-print(available_time_series_list)
-
-
-oldest_norveg_sources_id = []
-not_norveg = []
+oldest_norveg_sources_id_list = []
 for i in range(len(available_time_series_list)):
     for j in range(len(list_sources_id)):
-       if (available_time_series_list[i][1])[0:7] == list_sources_id[j] and len(oldest_norveg_sources_id) != 10:
-            oldest_norveg_sources_id.append((available_time_series_list[i][1])[0:7])
-print(oldest_norveg_sources_id)
+        matchSN = re.search(r'SN\d*', available_time_series_list[i][1])
+        if matchSN.group(0) == list_sources_id[j] and len(oldest_norveg_sources_id_list) != 10:
+            matchDate = re.search(r'\d{4}-\d{2}-\d{2}', available_time_series_list[i][0])
+            oldest_norveg_sources_id_list.append((matchSN.group(0), matchDate.group(0)))
 
 
-
-
-
-
-
-# tmp_dict = {}
-# for key in range(len(available_time_series_data)):
-#     tmp_dict[available_time_series_data[key]] = available_time_series_data[key]["sourceId"]
-# sorted_tuple = sorted(tmp_dict.items(), key=lambda x: x[0])
-# print(sorted_tuple[0][1])
-
-# string_src_id = ','
-# tmp_list_src_id = []
-# i = 0
-# for j in range(len(list_sources_id)):
-#     tmp_list_src_id.append(list_sources_id[j])
-#     i += 1
-#     if i == 255:
-#         print(string_src_id.join(tmp_list_src_id))
-#         tmp_list_src_id = []
-#         i = 0
-
-# string_src_id = ','
-# available_time_series_url = 'https://frost.met.no/observations/availableTimeSeries/v0.jsonld'
-# available_time_series_parameters = {'ids': string_src_id.join(list_sources_id), 'elements': 'wind_from_direction'}
-# available_time_series_data = get_data(available_time_series_url, available_time_series_parameters)
-# print(available_time_series_data)
-
-
-
-# sources_data = get_data(sources_endpoint, sources_parameters)
-#
-# list_date = []
-# for key in range(len(sources_data)):
-#     list_date.append(sources_data[key]["validFrom"])
-# list_date.sort()
-# list_oldest10 = list_date[0:10]
-# print(list_oldest10)
-#
-#
-# list_sources_id = []
-# for key in range(len(sources_data)):
-#     if sources_data[key]["validFrom"] in list_oldest10:
-#         list_sources_id.append(sources_data[key]["id"])
-#
-# string_src_id = ','
-# print(string_src_id.join(list_sources_id))
-# observations_endpoint = 'https://frost.met.no/observations/v0.jsonld'
-# observations_parameters = {'sources': 'SN40250', 'elements': 'mean(wind_from_direction PT1H)',
-#                            'referencetime': '2010-04-01/2020-04-03'}
-#
-# # observations_data = get_data(observations_endpoint, observations_parameters)
-# response = requests.get(observations_endpoint, observations_parameters, auth=(client_id, '')).json()
-# print(response)
-#
-
-# with open('data.txt', 'w') as f:
-#     json.dump(observations_data, f)
+"""Get observations from oldest 10 Norwegian weather stations with wind_from_direction measures"""
+observations_endpoint = 'https://frost.met.no/observations/v0.jsonld'
+for key in range(len(oldest_norveg_sources_id_list)):
+    date_from = datetime.strptime(oldest_norveg_sources_id_list[key][1], '%Y-%m-%d').date()
+    date_to = date_from + timedelta(days=30)
+    date_from_to_str = str(date_from) + '/' + str(date_to)
+    observations_parameters = {'sources': oldest_norveg_sources_id_list[key][0], 'elements': 'wind_from_direction',
+                               'referencetime': date_from_to_str}
+    observations_data = get_data(observations_endpoint, observations_parameters)
