@@ -17,4 +17,4 @@ class Observations(models.Model):
     value = models.IntegerField()
     date = models.DateField()
     time = models.TimeField()
-    fk = models.ForeignKey('Stations', on_delete=models.PROTECT)
+    fk = models.ForeignKey('Stations', on_delete=models.PROTECT, related_name='observations')

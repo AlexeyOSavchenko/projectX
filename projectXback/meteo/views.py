@@ -1,20 +1,18 @@
-from django.shortcuts import render
-
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import requests, re
 from datetime import datetime, timedelta
 from .models import Stations, Observations
+from .serializers import StationSerialazer, ObservationSerialazer
 import json
 
-def index(request):
-    client_id = "0feca865-844a-4260-939a-a725430e72cc"
 
+def update(request):
+    client_id = "0feca865-844a-4260-939a-a725430e72cc"
 
     def get_data(endpoint, parameters):
         response = requests.get(endpoint, parameters, auth=(client_id, '')).json()
         json_data = response['data']
         return json_data
-
 
     """ Get Norwegian weather stations which measures wind from direction"""
     sources_endpoint = 'https://frost.met.no/sources/v0.jsonld'
@@ -26,7 +24,7 @@ def index(request):
         list_sources_id.append(sources_data[key]["id"])
 
     """"Search oldest periods of observations with wind_from_direction measures
-        SN has date period ValidFrom and ValidTo, but wind direction measurements have a different periods (from 
+        SN has date period ValidFrom and ValidTo, but wind direction measurements have a different periods (from
         Available time series with key wind_from_direction)"""
     available_time_series_url = 'https://frost.met.no/observations/availableTimeSeries/v0.jsonld'
     available_time_series_parameters = {'elements': 'wind_from_direction', 'fields': 'sourceId,validFrom,elementId'}
@@ -62,16 +60,21 @@ def index(request):
                                                          'country': sources_info[0]['country'],
                                                          'coordinateX': sources_info[0]['geometry']['coordinates'][0],
                                                          'coordinateY': sources_info[0]['geometry']['coordinates'][1],
-                                                         'validFrom': (re.search(r'\d{4}-\d{2}-\d{2}',
-                                                                                 sources_info[0]['validFrom'])).group(0)}, )
+                                                         'validFrom': (re.search(r'\d{4}-\d{2}-\d{2}', sources_info[0]['validFrom'])).group(0)}, )
         for key2 in range(len(observations_data)):
             Observations.objects.update_or_create(ids=observations_data[key2]['sourceId'],
                                                   date=(re.search(r'\d{4}-\d{2}-\d{2}', observations_data[key2]['referenceTime'])).group(0),
                                                   time=(re.search(r'\d{2}:\d{2}:\d{2}', observations_data[key2]['referenceTime'])).group(0),
-                                                                 defaults={'ids': observations_data[key2]['sourceId'],
-                                                                           'value': observations_data[key2]['observations'][0]['value'],
-                                                                           'date': (re.search(r'\d{4}-\d{2}-\d{2}', observations_data[key2]['referenceTime'])).group(0),
-                                                                           'time': (re.search(r'\d{2}:\d{2}:\d{2}', observations_data[key2]['referenceTime'])).group(0),
-                                                                           'fk_id': st[0].pk}, )
+                                                  defaults={'ids': observations_data[key2]['sourceId'],
+                                                            'value': observations_data[key2]['observations'][0]['value'],
+                                                            'date': (re.search(r'\d{4}-\d{2}-\d{2}', observations_data[key2]['referenceTime'])).group(0),
+                                                            'time': (re.search(r'\d{2}:\d{2}:\d{2}', observations_data[key2]['referenceTime'])).group(0),
+                                                            'fk_id': st[0].pk}, )
 
     return HttpResponse("Ok")
+
+def api_stations(request):
+    if request.method == 'GET':
+        st = Stations.objects.all()
+        ser = StationSerialazer(st, many=True)
+        return JsonResponse(ser.data, safe=False)
