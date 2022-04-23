@@ -29,14 +29,28 @@
     $.getJSON("http://127.0.0.1:8000/api/stations", function(data){
       var meteo_data = '';
       $.each(data, function(key, value){
-        meteo_data += '<tr>';
-        meteo_data += '<td>'+value.ids+'</td>';
-        meteo_data += '<td>'+value.name+'</td>';
-        meteo_data += '<td>'+value.country+'</td>';
-        meteo_data += '<td>'+value.coordinateX+'</td>';
-        meteo_data += '<td>'+value.coordinateY+'</td>';
-        meteo_data += '<td>'+value.validFrom+'</td>';
-        meteo_data += '</tr>';
+          meteo_data += '<tr>';
+          meteo_data += '<td>'+value.ids+'</td>';
+          meteo_data += '<td>'+value.name+'</td>';
+          meteo_data += '<td>'+value.country+'</td>';
+          meteo_data += '<td>'+value.coordinateX+'</td>';
+          meteo_data += '<td>'+value.coordinateY+'</td>';
+          meteo_data += '<td>'+value.validFrom+'</td>';
+          meteo_data += '<tr>';
+//          meteo_data += '<th>ids</th>';
+          meteo_data += '<th>date</th>';
+          meteo_data += '<th>time</th>';
+          meteo_data += '<th>wind directions</th>';
+          meteo_data += '</tr>';
+          $.each(value.observations, function(kk, vv){
+              meteo_data += '<tr>';
+//              meteo_data += '<td>'+vv.ids+'</td>';
+              meteo_data += '<td>'+vv.date+'</td>';
+              meteo_data += '<td>'+vv.time+'</td>';
+              meteo_data += '<td>'+vv.value+'</td>';
+              meteo_data += '</tr>';
+          });
+          meteo_data += '</tr>';
       });
       $('#meteo_table').append(meteo_data);
     });
