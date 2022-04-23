@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+  <scrip src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped" id="employee_table">
+        <tr>
+          <th>ids</th>
+          <th>name</th>
+          <th>country</th>
+          <th>coordinateX</th>
+          <th>coordinateY</th>
+          <th>validFrom</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+
+<script>
+  $(document).ready(function(){
+    $.getJSON("http://127.0.0.1:8000/api/stations", function(data){
+      var employee_data = '';
+      $.each(data, function(key, value){
+        employee_data += '<tr>';
+        employee_data += '<td>'+value.ids+'</td>';
+        employee_data += '<td>'+value.name+'</td>';
+        employee_data += '<td>'+value.country+'</td>';
+        employee_data += '<td>'+value.coordinateX+'</td>';
+        employee_data += '<td>'+value.coordinateY+'</td>';
+        employee_data += '<td>'+value.validFrom+'</td>';
+        employee_data += '</tr>';
+      });
+      $('#employee_table').append(employee_data);
+    });
+  });
+</script>  
