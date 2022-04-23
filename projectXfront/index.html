@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <div class="table-responsive">
-      <table class="table table-bordered table-striped" id="employee_table">
+      <table class="table table-bordered table-striped" id="meteo_table">
         <tr>
           <th>ids</th>
           <th>name</th>
@@ -27,18 +27,18 @@
 <script>
   $(document).ready(function(){
     $.getJSON("http://127.0.0.1:8000/api/stations", function(data){
-      var employee_data = '';
+      var meteo_data = '';
       $.each(data, function(key, value){
-        employee_data += '<tr>';
-        employee_data += '<td>'+value.ids+'</td>';
-        employee_data += '<td>'+value.name+'</td>';
-        employee_data += '<td>'+value.country+'</td>';
-        employee_data += '<td>'+value.coordinateX+'</td>';
-        employee_data += '<td>'+value.coordinateY+'</td>';
-        employee_data += '<td>'+value.validFrom+'</td>';
-        employee_data += '</tr>';
+        meteo_data += '<tr>';
+        meteo_data += '<td>'+value.ids+'</td>';
+        meteo_data += '<td>'+value.name+'</td>';
+        meteo_data += '<td>'+value.country+'</td>';
+        meteo_data += '<td>'+value.coordinateX+'</td>';
+        meteo_data += '<td>'+value.coordinateY+'</td>';
+        meteo_data += '<td>'+value.validFrom+'</td>';
+        meteo_data += '</tr>';
       });
-      $('#employee_table').append(employee_data);
+      $('#meteo_table').append(meteo_data);
     });
   });
 </script>  
