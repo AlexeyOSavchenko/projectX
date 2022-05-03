@@ -8,5 +8,5 @@ class ViewsTestCase(TestCase):
 
 class ModelsTestCase(TestCase):
     def test_insert_to_DB(self):
-        tst_st = Stations.objects.create(ids='test_id', name='test_name', country='Russia', coordinateX='0.0', coordinateY='0.0', validFrom='1970-01-01')
+        Stations.objects.create(ids='test_id', name='test_name', country='Russia', coordinateX='0.0', coordinateY='0.0', validFrom='1970-01-01')
 
