@@ -21,4 +21,4 @@ jobs:
         pip install -r projectXback/requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test
+        python projectXback/manage.py test
