@@ -1,1 +1,1 @@
-![example workflow](https://github.com/AlexeyOSavchenko/projectX/actions/workflows/django/badge.svg)
+![workflow](https://github.com/AlexeyOSavchenko/projectX/actions/workflows/DjangoCI/badge.svg)
