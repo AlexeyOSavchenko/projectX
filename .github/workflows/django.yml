@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_DB: meteo
           POSTGRES_PORT: 5432
-          POSTGRES_PASSWORD: Akiq8exp
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
         ports:
           - 5432:5432
         options: >-
