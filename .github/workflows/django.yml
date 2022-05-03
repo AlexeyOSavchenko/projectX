@@ -13,13 +13,17 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_DB: meteo
+          POSTGRES_PORT: 5432
           POSTGRES_PASSWORD: Akiq8exp
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
-          --health-interval 10s
+          --health-interval 60s
           --health-timeout 5s
-          --health-retries 5
-
+          --health-retries 3
+      
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.9
@@ -35,9 +39,6 @@ jobs:
       run: |
         cd projectXback
         python manage.py migrate
-      env:
-        POSTGRES_HOST: postgres
-        POSTGRES_PORT: 5432
     - name: Run Tests
       run: |
         cd projectXback
