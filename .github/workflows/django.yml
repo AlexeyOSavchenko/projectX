@@ -46,7 +46,7 @@ jobs:
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
       with:
-        projectBaseDir: projectXback
+#        projectBaseDir: projectXback
         args: >
           -Dsonar.organization=alexeyosavchenko
           -Dsonar.projectKey=AlexeyOSavchenko_projectX
