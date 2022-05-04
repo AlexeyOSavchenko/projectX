@@ -9,20 +9,20 @@ jobs:
 
     runs-on: ubuntu-latest
     
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_DB: meteo
-          POSTGRES_PORT: 5432
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 60s
-          --health-timeout 5s
-          --health-retries 3
+#     services:
+#       postgres:
+#         image: postgres
+#         env:
+#           POSTGRES_DB: meteo
+#           POSTGRES_PORT: 5432
+#           POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 60s
+#           --health-timeout 5s
+#           --health-retries 3
       
     steps:
     - uses: actions/checkout@v3
@@ -49,7 +49,7 @@ jobs:
         projectBaseDir: projectXback
         args: >
           -Dsonar.organization=alexeyosavchenko
-          -Dsonar.projectKey=my-projectX
+          -Dsonar.projectKey=projectX
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
