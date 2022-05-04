@@ -50,7 +50,6 @@ jobs:
         args: >
           -Dsonar.organization=alexeyosavchenko
           -Dsonar.projectKey=AlexeyOSavchenko_projectX
-          -Dsonar.verbose=true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
