@@ -48,7 +48,7 @@ jobs:
       with:
         projectBaseDir: projectXback
         args: >
-          -Dsonar.organization="Alexey Savchenko"
+          -Dsonar.organization=alexeyosavchenko
           -Dsonar.projectKey=my-projectX
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
