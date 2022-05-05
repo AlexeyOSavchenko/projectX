@@ -66,4 +66,4 @@ jobs:
         context: .
         file: ./projectXback/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/projectXback:latest
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/meteo:latest
