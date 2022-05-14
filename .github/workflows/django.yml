@@ -47,6 +47,12 @@ jobs:
         cd projectXback
         python manage.py migrate
     - name: Run Tests
+      env:
+        DB_HOST: localhost
+        DB_NAME: meteo
+        DB_USER: postgres
+        DB_SECRET: haha
+        SECRET_KEY: test
       run: |
         cd projectXback
         python manage.py test --verbosity=2
