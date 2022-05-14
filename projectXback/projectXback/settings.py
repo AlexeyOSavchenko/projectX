@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'projectXback.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', meteo),
-        'USER': os.environ.get('DB_USER', postgres),
-        'PASSWORD': os.environ.get('DB_SECRET', Akiq8exp),
-        'HOST': os.environ.get('DB_HOST', postgres),
+        'NAME': os.environ.get('DB_NAME', 'meteo'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_SECRET', 'Akiq8exp'),
+        'HOST': os.environ.get('DB_HOST', 'postgres'),
         'PORT': '5432'
     }
 }
