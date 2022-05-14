@@ -37,10 +37,10 @@ jobs:
         pip install -r requirements.txt    
     - name: Migrations
       env:
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: meteo
-          POSTGRES_PORT: 5432
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+          DB_HOST: localhost
+          DB_NAME: meteo
+          DB_USER: postgres
+          DB_SECRET: ${{ secrets.DB_PASS }}
       run: |
         cd projectXback
         python manage.py migrate
