@@ -36,7 +36,7 @@ jobs:
         cd projectXback
         pip install -r requirements.txt    
     - name: Migrations
-      run: python manage.py migrate
+      run: python /usr/src/app/manage.py migrate
      #   cd projectXback
     - name: Run Tests
       run: |
