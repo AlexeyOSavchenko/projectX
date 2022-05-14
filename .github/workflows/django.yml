@@ -37,7 +37,7 @@ jobs:
         pip install -r requirements.txt    
     - name: Migrations
       env:
-        DB_HOST: postgres
+        DB_HOST: localhost
         DB_NAME: meteo
         DB_USER: postgres
 #        DB_SECRET: ${{ secrets.DB_PASS }}
@@ -47,6 +47,12 @@ jobs:
         cd projectXback
         python manage.py migrate
     - name: Run Tests
+      env:
+        DB_HOST: localhost
+        DB_NAME: meteo
+        DB_USER: postgres
+        DB_SECRET: haha
+        SECRET_KEY: test
       run: |
         cd projectXback
         python manage.py test --verbosity=2
@@ -71,6 +77,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./projectXback
-        file: Dockerfile
+        file: ./projectXback/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/meteorepo:latest
